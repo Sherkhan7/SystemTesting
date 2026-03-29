@@ -22,31 +22,35 @@ public class AdminPageLayout {
     private final WebDriverWait autocompleteWait;
 
     // Search form — scoped inside the filter card, not the add/edit form
-    private final By usernameSearchInput = By.xpath(
+    private final By usernameSearchInputLocator = By.xpath(
             "//div[contains(@class,'oxd-table-filter')]//label[normalize-space()='Username']" +
                     "/ancestor::div[contains(@class,'oxd-input-group')]//input");
-    private final By searchButton = By.xpath(
+    private final By searchButtonLocator = By.xpath(
             "//div[contains(@class,'oxd-table-filter')]//button[@type='submit']");
     private final By addButton = By.cssSelector(
             ".orangehrm-header-container button");
 
     // Results table
-    private final By resultRows = By.xpath(
+    private final By resultRowsLocator = By.xpath(
             "//div[contains(@class,'oxd-table-body')]//div[contains(@class,'oxd-table-row')]");
-    private final By noRecordsNotice = By.xpath(
+    private final By noRecordsNoticeLocator = By.xpath(
             "//*[contains(text(),'No Records Found')]");
 
     // Add-user form — label-based XPath
-    private final By userRoleDropdown = By.xpath(
+    private final By userRoleDropdownLocator = By.xpath(
             "//label[normalize-space()='User Role']/ancestor::div[contains(@class,'oxd-input-group')]" +
                     "//div[contains(@class,'oxd-select-text')]");
     private final By employeeNameInput = By.cssSelector(
             ".oxd-autocomplete-wrapper input");
-    private final By statusDropdown = By.xpath(
+    private final By statusDropdownLocator = By.xpath(
             "//label[normalize-space()='Status']/ancestor::div[contains(@class,'oxd-input-group')]" +
                     "//div[contains(@class,'oxd-select-text')]");
-    private final By usernameInput = By.xpath(
+    private final By usernameInputLocator = By.xpath(
             "//label[normalize-space()='Username']/ancestor::div[contains(@class,'oxd-input-group')]//input");
+    private final By passwordInputLocator = By.xpath(
+            "//label[normalize-space()='Password']/ancestor::div[contains(@class,'oxd-input-group')]//input[@type='password']");
+    private final By confirmPasswordInputLocator = By.xpath(
+            "//label[normalize-space()='Confirm Password']/ancestor::div[contains(@class,'oxd-input-group')]//input[@type='password']");
     private final By saveButton = By.cssSelector(
             "button[type='submit']");
     private final By requiredErrors = By.cssSelector(
@@ -61,23 +65,23 @@ public class AdminPageLayout {
     public void navigateToList() {
         driver.get(ADMIN_LIST_URL);
         // Wait until the search form is ready before proceeding
-        wait.until(ExpectedConditions.visibilityOfElementLocated(usernameSearchInput));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(usernameSearchInputLocator));
     }
 
     public void searchByUsername(String username) {
         WebElement input = wait.until(
-                ExpectedConditions.visibilityOfElementLocated(usernameSearchInput));
+                ExpectedConditions.visibilityOfElementLocated(usernameSearchInputLocator));
         input.clear();
         input.sendKeys(username);
-        wait.until(ExpectedConditions.elementToBeClickable(searchButton)).click();
+        wait.until(ExpectedConditions.elementToBeClickable(searchButtonLocator)).click();
     }
 
     public boolean isUsernameInResults(String username) {
         wait.until(ExpectedConditions.or(
-                ExpectedConditions.visibilityOfElementLocated(resultRows),
-                ExpectedConditions.visibilityOfElementLocated(noRecordsNotice)
+                ExpectedConditions.visibilityOfElementLocated(resultRowsLocator),
+                ExpectedConditions.visibilityOfElementLocated(noRecordsNoticeLocator)
         ));
-        List<WebElement> rows = driver.findElements(resultRows);
+        List<WebElement> rows = driver.findElements(resultRowsLocator);
         for (WebElement row : rows) {
             if (row.getText().contains(username)) {
                 return true;
@@ -91,10 +95,10 @@ public class AdminPageLayout {
     }
 
     public void selectUserRole(String role) {
-        wait.until(ExpectedConditions.elementToBeClickable(userRoleDropdown)).click();
-        By option = By.xpath(
+        wait.until(ExpectedConditions.elementToBeClickable(userRoleDropdownLocator)).click();
+        By userRoleOptionLocator = By.xpath(
                 "//div[@role='option']//span[text()='" + role + "']");
-        wait.until(ExpectedConditions.elementToBeClickable(option)).click();
+        wait.until(ExpectedConditions.elementToBeClickable(userRoleOptionLocator)).click();
     }
 
     public void selectEmployeeName(String name) {
@@ -119,26 +123,22 @@ public class AdminPageLayout {
     }
 
     public void selectStatus(String status) {
-        wait.until(ExpectedConditions.elementToBeClickable(statusDropdown)).click();
-        By option = By.xpath(
+        wait.until(ExpectedConditions.elementToBeClickable(statusDropdownLocator)).click();
+        By statusOptionLocator = By.xpath(
                 "//div[@role='option']//span[text()='" + status + "']");
-        wait.until(ExpectedConditions.elementToBeClickable(option)).click();
+        wait.until(ExpectedConditions.elementToBeClickable(statusOptionLocator)).click();
     }
 
     public void enterUsername(String username) {
         WebElement input = wait.until(
-                ExpectedConditions.visibilityOfElementLocated(usernameInput));
+                ExpectedConditions.visibilityOfElementLocated(usernameInputLocator));
         input.clear();
         input.sendKeys(username);
     }
 
     public void enterAndConfirmPassword(String password) {
-        By passwordField = By.xpath(
-                "//label[normalize-space()='Password']/ancestor::div[contains(@class,'oxd-input-group')]//input[@type='password']");
-        By confirmPasswordField = By.xpath(
-                "//label[normalize-space()='Confirm Password']/ancestor::div[contains(@class,'oxd-input-group')]//input[@type='password']");
-        wait.until(ExpectedConditions.visibilityOfElementLocated(passwordField)).sendKeys(password);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(confirmPasswordField)).sendKeys(password);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(passwordInputLocator)).sendKeys(password);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(confirmPasswordInputLocator)).sendKeys(password);
     }
 
     public void submitUserForm() {
