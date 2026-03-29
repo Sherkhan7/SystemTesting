@@ -6,15 +6,16 @@ import org.openqa.selenium.WebDriver;
  * Shared context object injected by Cucumber-PicoContainer into every step
  * class that needs the same WebDriver instance within one scenario.
  */
-public class DriverHolder {
+public class WebDriverContext {
 
-    private WebDriver driver;
+    private WebDriver webDriver;
 
-    public WebDriver getDriver() {
-        return driver;
+    public WebDriver getWebDriver() {
+        return webDriver;
     }
 
-    public void setDriver(WebDriver driver) {
-        this.driver = driver;
+    public void setWebDriver(WebDriver webDriver) {
+        this.webDriver = webDriver;
     }
 }
+

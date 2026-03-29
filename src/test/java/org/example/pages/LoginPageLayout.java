@@ -8,35 +8,34 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
-public class LoginPage {
+public class LoginPageLayout {
 
-    private final WebDriver driver;
     private final WebDriverWait wait;
 
     private final By usernameField = By.name("username");
     private final By passwordField = By.name("password");
-    private final By loginButton   = By.cssSelector("button[type='submit']");
-    private final By errorMessage  = By.cssSelector(".oxd-alert-content-text");
-    private final By dashboardTitle = By.cssSelector(".oxd-topbar-header-title");
+    private final By loginButton = By.cssSelector("button[type='submit']");
+    private final By errorMessage = By.cssSelector(".oxd-alert-content-text");
 
-    public LoginPage(WebDriver driver) {
-        this.driver = driver;
+    public LoginPageLayout(WebDriver driver) {
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }
 
-    public void enterUsername(String username) {
-        WebElement field = wait.until(ExpectedConditions.visibilityOfElementLocated(usernameField));
-        field.clear();
-        field.sendKeys(username);
+    public void typeUsername(String username) {
+        WebElement usernameInput = wait.until(
+                ExpectedConditions.visibilityOfElementLocated(usernameField));
+        usernameInput.clear();
+        usernameInput.sendKeys(username);
     }
 
-    public void enterPassword(String password) {
-        WebElement field = wait.until(ExpectedConditions.visibilityOfElementLocated(passwordField));
-        field.clear();
-        field.sendKeys(password);
+    public void typePassword(String password) {
+        WebElement passwordInput = wait.until(
+                ExpectedConditions.visibilityOfElementLocated(passwordField));
+        passwordInput.clear();
+        passwordInput.sendKeys(password);
     }
 
-    public void clickLogin() {
+    public void submitLogin() {
         wait.until(ExpectedConditions.elementToBeClickable(loginButton)).click();
     }
 
@@ -53,3 +52,7 @@ public class LoginPage {
         return wait.until(ExpectedConditions.visibilityOfElementLocated(errorMessage)).getText();
     }
 }
+
+
+
+

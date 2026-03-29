@@ -11,7 +11,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 import java.util.List;
 
-public class AdminPage {
+public class AdminPageLayout {
 
     private static final String ADMIN_LIST_URL =
             "https://opensource-demo.orangehrmlive.com/web/index.php/admin/viewSystemUsers";
@@ -24,7 +24,7 @@ public class AdminPage {
     // Search form — scoped inside the filter card, not the add/edit form
     private final By usernameSearchInput = By.xpath(
             "//div[contains(@class,'oxd-table-filter')]//label[normalize-space()='Username']" +
-            "/ancestor::div[contains(@class,'oxd-input-group')]//input");
+                    "/ancestor::div[contains(@class,'oxd-input-group')]//input");
     private final By searchButton = By.xpath(
             "//div[contains(@class,'oxd-table-filter')]//button[@type='submit']");
     private final By addButton = By.cssSelector(
@@ -39,12 +39,12 @@ public class AdminPage {
     // Add-user form — label-based XPath
     private final By userRoleDropdown = By.xpath(
             "//label[normalize-space()='User Role']/ancestor::div[contains(@class,'oxd-input-group')]" +
-            "//div[contains(@class,'oxd-select-text')]");
+                    "//div[contains(@class,'oxd-select-text')]");
     private final By employeeNameInput = By.cssSelector(
             ".oxd-autocomplete-wrapper input");
     private final By statusDropdown = By.xpath(
             "//label[normalize-space()='Status']/ancestor::div[contains(@class,'oxd-input-group')]" +
-            "//div[contains(@class,'oxd-select-text')]");
+                    "//div[contains(@class,'oxd-select-text')]");
     private final By usernameInput = By.xpath(
             "//label[normalize-space()='Username']/ancestor::div[contains(@class,'oxd-input-group')]//input");
     private final By saveButton = By.cssSelector(
@@ -52,7 +52,7 @@ public class AdminPage {
     private final By requiredErrors = By.cssSelector(
             ".oxd-input-field-error-message");
 
-    public AdminPage(WebDriver driver) {
+    public AdminPageLayout(WebDriver driver) {
         this.driver = driver;
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         this.autocompleteWait = new WebDriverWait(driver, Duration.ofSeconds(20));
@@ -72,7 +72,7 @@ public class AdminPage {
         wait.until(ExpectedConditions.elementToBeClickable(searchButton)).click();
     }
 
-    public boolean isUserInResults(String username) {
+    public boolean isUsernameInResults(String username) {
         wait.until(ExpectedConditions.or(
                 ExpectedConditions.visibilityOfElementLocated(resultRows),
                 ExpectedConditions.visibilityOfElementLocated(noRecordsNotice)
@@ -86,18 +86,18 @@ public class AdminPage {
         return false;
     }
 
-    public void clickAdd() {
+    public void openAddUserForm() {
         wait.until(ExpectedConditions.elementToBeClickable(addButton)).click();
     }
 
-    public void fillUserRole(String role) {
+    public void selectUserRole(String role) {
         wait.until(ExpectedConditions.elementToBeClickable(userRoleDropdown)).click();
         By option = By.xpath(
                 "//div[@role='option']//span[text()='" + role + "']");
         wait.until(ExpectedConditions.elementToBeClickable(option)).click();
     }
 
-    public void fillEmployeeName(String name) {
+    public void selectEmployeeName(String name) {
         String searchTerm = name.split("\\s+")[0];
 
         WebElement input = wait.until(
@@ -118,21 +118,21 @@ public class AdminPage {
                 .perform();
     }
 
-    public void fillStatus(String status) {
+    public void selectStatus(String status) {
         wait.until(ExpectedConditions.elementToBeClickable(statusDropdown)).click();
         By option = By.xpath(
                 "//div[@role='option']//span[text()='" + status + "']");
         wait.until(ExpectedConditions.elementToBeClickable(option)).click();
     }
 
-    public void fillUsername(String username) {
+    public void enterUsername(String username) {
         WebElement input = wait.until(
                 ExpectedConditions.visibilityOfElementLocated(usernameInput));
         input.clear();
         input.sendKeys(username);
     }
 
-    public void fillPassword(String password) {
+    public void enterAndConfirmPassword(String password) {
         By passwordField = By.xpath(
                 "//label[normalize-space()='Password']/ancestor::div[contains(@class,'oxd-input-group')]//input[@type='password']");
         By confirmPasswordField = By.xpath(
@@ -141,12 +141,15 @@ public class AdminPage {
         wait.until(ExpectedConditions.visibilityOfElementLocated(confirmPasswordField)).sendKeys(password);
     }
 
-    public void clickSave() {
+    public void submitUserForm() {
         wait.until(ExpectedConditions.elementToBeClickable(saveButton)).click();
     }
 
-    public boolean hasRequiredErrors() {
+    public boolean areRequiredErrorsVisible() {
         wait.until(ExpectedConditions.visibilityOfElementLocated(requiredErrors));
         return !driver.findElements(requiredErrors).isEmpty();
     }
 }
+
+
+
